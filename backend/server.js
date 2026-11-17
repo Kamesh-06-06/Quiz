@@ -9,12 +9,27 @@ const leaderboardRoutes = require('./routes/leaderboard');
 
 const app = express();
 
+const allowedOrigins = [
+  'https://quiz-6lrm.vercel.app',
+  'https://quiz-kamesh15.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: ['https://quiz-kamesh15.vercel.app', 'http://localhost:5173'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked: ${origin}`));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+// Handle preflight requests explicitly
+app.options('*', cors());
 app.use(express.json());
 
 app.use('/api/students', authRoutes);
