@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'quiz-two-eosin-42.vercel.app',
 });
 
 api.interceptors.request.use((config) => {
